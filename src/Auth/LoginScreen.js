@@ -1,14 +1,20 @@
 import { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   SafeAreaView,
+  StatusBar as NativeStatusBar,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
 import { loginUser } from '../APIs/authApi';
+
+const topInset = Platform.OS === 'android' ? NativeStatusBar.currentHeight ?? 0 : 0;
+const bottomInset = Platform.OS === 'android' ? 34 : 10;
 
 export default function LoginScreen({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -36,34 +42,38 @@ export default function LoginScreen({ onLogin }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar style="light" />
       <View style={styles.container}>
-        <Text style={styles.brand}>SafeLink</Text>
-        <Text style={styles.title}>Sign in to your portal</Text>
-        <Text style={styles.subtitle}>
-          Borrowers and lenders are redirected based on their role after login.
-        </Text>
+        <View style={styles.header}>
+          <Text style={styles.title}>LOGIN</Text>
+          <Text style={styles.subtitle}>Welcome, let's get started</Text>
+        </View>
 
-        <View style={styles.card}>
+        <View style={styles.form}>
           <Text style={styles.label}>Email</Text>
           <TextInput
             autoCapitalize="none"
             keyboardType="email-address"
             onChangeText={setEmail}
-            placeholder="Enter your email"
-            placeholderTextColor="#6b7280"
+            placeholder="jdoe@user.co.bw"
+            placeholderTextColor="#D1D5DB"
             style={styles.input}
             value={email}
           />
 
-          <Text style={styles.label}>Password</Text>
+          <Text style={[styles.label, styles.passwordLabel]}>Password</Text>
           <TextInput
             onChangeText={setPassword}
-            placeholder="Enter your password"
-            placeholderTextColor="#6b7280"
+            placeholder="***************"
+            placeholderTextColor="#D1D5DB"
             secureTextEntry
             style={styles.input}
             value={password}
           />
+
+          <Pressable style={styles.forgotPassword}>
+            <Text style={styles.forgotPasswordText}>Forgot password?</Text>
+          </Pressable>
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -78,15 +88,15 @@ export default function LoginScreen({ onLogin }) {
             {isLoading ? (
               <ActivityIndicator color="#ffffff" />
             ) : (
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>LOGIN</Text>
             )}
           </Pressable>
         </View>
 
-        <View style={styles.demoBox}>
-          <Text style={styles.demoTitle}>Demo accounts</Text>
-          <Text style={styles.demoText}>Borrower: borrower@safelink.com / 123456</Text>
-          <Text style={styles.demoText}>Lender: lender@safelink.com / 123456</Text>
+        <View style={styles.footer}>
+          <Text style={styles.signupText}>Don't have an account?, sign up here.</Text>
+          <Text style={styles.demoText}>Demo: borrower@safelink.com / 123456</Text>
+          <Text style={styles.demoText}>Demo: lender@safelink.com / 123456</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -96,95 +106,92 @@ export default function LoginScreen({ onLogin }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#494B4D',
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 24,
+    justifyContent: 'space-between',
+    paddingBottom: bottomInset + 20,
+    paddingHorizontal: 30,
+    paddingTop: topInset + 56,
   },
-  brand: {
-    color: '#0f766e',
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 1,
-    marginBottom: 8,
-    textTransform: 'uppercase',
+  header: {
+    alignItems: 'center',
   },
   title: {
-    color: '#111827',
-    fontSize: 30,
-    fontWeight: '700',
+    color: '#F8FAFC',
+    fontSize: 32,
+    fontWeight: '400',
+    letterSpacing: 0.5,
   },
   subtitle: {
-    color: '#4b5563',
+    color: '#F4F4F5',
     fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 24,
-    marginTop: 8,
+    marginTop: 26,
   },
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#111827',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    elevation: 4,
+  form: {
+    marginTop: 0,
   },
   label: {
-    color: '#111827',
+    color: '#F4F4F5',
     fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 8,
-    marginTop: 12,
+    marginBottom: 10,
+    textTransform: 'lowercase',
+  },
+  passwordLabel: {
+    marginTop: 26,
   },
   input: {
-    backgroundColor: '#f9fafb',
-    borderColor: '#d1d5db',
-    borderRadius: 14,
-    borderWidth: 1,
-    color: '#111827',
-    fontSize: 15,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    borderBottomColor: '#69C97C',
+    borderBottomWidth: 3,
+    color: '#F8FAFC',
+    fontSize: 18,
+    paddingBottom: 10,
+    paddingHorizontal: 0,
+    paddingTop: 0,
+  },
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginTop: 14,
+  },
+  forgotPasswordText: {
+    color: '#F8FAFC',
+    fontSize: 14,
+    fontWeight: '700',
   },
   error: {
-    color: '#b91c1c',
+    color: '#FCA5A5',
     fontSize: 14,
-    marginTop: 14,
+    marginTop: 18,
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#0f766e',
+    backgroundColor: '#28C55F',
     borderRadius: 14,
-    marginTop: 20,
+    marginTop: 64,
     paddingVertical: 15,
   },
   buttonPressed: {
-    opacity: 0.9,
+    opacity: 0.92,
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 19,
+    fontWeight: '500',
+    letterSpacing: 0.5,
   },
-  demoBox: {
-    backgroundColor: '#e6fffb',
-    borderRadius: 16,
-    marginTop: 20,
-    padding: 16,
+  footer: {
+    alignItems: 'center',
   },
-  demoTitle: {
-    color: '#134e4a',
-    fontSize: 15,
+  signupText: {
+    color: '#F8FAFC',
+    fontSize: 14,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 24,
   },
   demoText: {
-    color: '#115e59',
-    fontSize: 14,
-    lineHeight: 21,
+    color: '#D1D5DB',
+    fontSize: 12,
+    lineHeight: 18,
   },
 });
