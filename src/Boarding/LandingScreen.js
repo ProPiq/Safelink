@@ -4,9 +4,11 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StatusBar as NativeStatusBar,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 
@@ -96,50 +98,114 @@ function BottomNavItem({ icon, label, onPress }) {
 }
 
 export default function LandingScreen({ onContinue }) {
+  const { height, width } = useWindowDimensions();
+  const isShortScreen = height <= 700;
+  const isVeryShortScreen = height <= 640;
+  const isNarrowScreen = width <= 360;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
-      <View style={styles.container}>
-        <View style={styles.topBar}>
+      <View
+        style={[
+          styles.container,
+          isShortScreen && styles.containerShort,
+          isVeryShortScreen && styles.containerVeryShort,
+          isNarrowScreen && styles.containerNarrow,
+        ]}
+      >
+        <View style={[styles.topBar, isShortScreen && styles.topBarShort]}>
           <Pressable hitSlop={10} onPress={onContinue} style={styles.iconButton}>
-            <Ionicons color="#F8FAFC" name="menu" size={28} />
+            <Ionicons color="#F8FAFC" name="menu" size={isNarrowScreen ? 24 : 28} />
           </Pressable>
 
-          <Text style={styles.brand}>SAFELINK</Text>
+          <Text style={[styles.brand, isNarrowScreen && styles.brandNarrow]}>SAFELINK</Text>
 
           <Pressable hitSlop={10} onPress={onContinue} style={styles.iconButton}>
-            <Ionicons color="#F8FAFC" name="person-circle-outline" size={27} />
+            <Ionicons
+              color="#F8FAFC"
+              name="person-circle-outline"
+              size={isNarrowScreen ? 24 : 27}
+            />
           </Pressable>
         </View>
 
-        <View style={styles.hero}>
-          <Text style={styles.heroText}>Connecting lenders & borrowers, securely.</Text>
-          <Ionicons color="#D59645" name="lock-closed" size={30} style={styles.lockIcon} />
-        </View>
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={[
+            styles.scrollContent,
+            isShortScreen && styles.scrollContentShort,
+            isNarrowScreen && styles.scrollContentNarrow,
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={[styles.hero, isShortScreen && styles.heroShort]}>
+            <Text
+              style={[
+                styles.heroText,
+                isShortScreen && styles.heroTextShort,
+                isVeryShortScreen && styles.heroTextVeryShort,
+                isNarrowScreen && styles.heroTextNarrow,
+              ]}
+            >
+              Connecting lenders & borrowers, securely.
+            </Text>
+            <Ionicons
+              color="#D59645"
+              name="lock-closed"
+              size={isShortScreen ? 24 : 30}
+              style={[styles.lockIcon, isShortScreen && styles.lockIconShort]}
+            />
+          </View>
 
-        <View style={styles.dashboardRow}>
-          {stats.map((item) => (
-            <DashboardCard key={item.title} {...item} />
-          ))}
-        </View>
+          <View style={[styles.dashboardRow, isNarrowScreen && styles.compactRow]}>
+            {stats.map((item) => (
+              <DashboardCard key={item.title} {...item} />
+            ))}
+          </View>
 
-        <Text style={styles.sectionTitle}>Opportunities</Text>
+          <Text style={[styles.sectionTitle, isShortScreen && styles.sectionTitleShort]}>
+            Opportunities
+          </Text>
 
-        <View style={styles.opportunityRow}>
-          {opportunities.map((item) => (
-            <OpportunityCard key={item.title} {...item} />
-          ))}
-        </View>
+          <View style={[styles.opportunityRow, isNarrowScreen && styles.compactRow]}>
+            {opportunities.map((item) => (
+              <OpportunityCard key={item.title} {...item} />
+            ))}
+          </View>
 
-        <View style={styles.actions}>
-          <Pressable onPress={onContinue} style={[styles.actionButton, styles.borrowButton]}>
-            <Text style={styles.actionButtonText}>I want to borrow</Text>
-          </Pressable>
+          <View style={[styles.actions, isShortScreen && styles.actionsShort]}>
+            <Pressable
+              onPress={onContinue}
+              style={[
+                styles.actionButton,
+                styles.borrowButton,
+                isShortScreen && styles.actionButtonShort,
+              ]}
+            >
+              <Text
+                style={[styles.actionButtonText, isNarrowScreen && styles.actionButtonTextNarrow]}
+              >
+                I want to borrow
+              </Text>
+            </Pressable>
 
-          <Pressable onPress={onContinue} style={[styles.actionButton, styles.lendButton]}>
-            <Text style={styles.actionButtonText}>I want to lend</Text>
-          </Pressable>
-        </View>
+            <Pressable
+              onPress={onContinue}
+              style={[
+                styles.actionButton,
+                styles.lendButton,
+                isShortScreen && styles.actionButtonShort,
+              ]}
+            >
+              <Text
+                style={[styles.actionButtonText, isNarrowScreen && styles.actionButtonTextNarrow]}
+              >
+                I want to lend
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
       </View>
 
       <View style={styles.bottomNav}>
@@ -156,16 +222,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#494B4D',
   },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  scrollContentShort: {
+    paddingBottom: 12,
+  },
+  scrollContentNarrow: {
+    paddingBottom: 8,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: topInset + 8,
+  },
+  containerShort: {
+    paddingTop: topInset + 4,
+  },
+  containerVeryShort: {
+    paddingTop: topInset + 2,
+  },
+  containerNarrow: {
+    paddingHorizontal: 12,
   },
   topBar: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 18,
+  },
+  topBarShort: {
+    marginBottom: 12,
   },
   iconButton: {
     alignItems: 'center',
@@ -178,11 +265,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '800',
   },
+  brandNarrow: {
+    fontSize: 16,
+  },
   hero: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 28,
     paddingRight: 24,
+  },
+  heroShort: {
+    marginBottom: 18,
+    paddingRight: 12,
   },
   heroText: {
     color: '#F4F4F5',
@@ -191,14 +285,33 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
     lineHeight: 42,
   },
+  heroTextShort: {
+    fontSize: 26,
+    lineHeight: 36,
+  },
+  heroTextVeryShort: {
+    fontSize: 24,
+    lineHeight: 32,
+  },
+  heroTextNarrow: {
+    fontSize: 22,
+    lineHeight: 30,
+  },
   lockIcon: {
     marginLeft: 4,
     marginTop: 16,
+  },
+  lockIconShort: {
+    marginTop: 10,
   },
   dashboardRow: {
     flexDirection: 'row',
     gap: 12,
     marginBottom: 28,
+  },
+  compactRow: {
+    gap: 8,
+    marginBottom: 20,
   },
   dashboardCard: {
     borderRadius: 16,
@@ -257,6 +370,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 16,
   },
+  sectionTitleShort: {
+    fontSize: 20,
+    marginBottom: 12,
+  },
   opportunityRow: {
     flexDirection: 'row',
     gap: 12,
@@ -283,10 +400,16 @@ const styles = StyleSheet.create({
   actions: {
     gap: 18,
   },
+  actionsShort: {
+    gap: 12,
+  },
   actionButton: {
     alignItems: 'center',
     borderRadius: 14,
     paddingVertical: 17,
+  },
+  actionButtonShort: {
+    paddingVertical: 14,
   },
   borrowButton: {
     backgroundColor: '#28C55F',
@@ -298,6 +421,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 17,
     fontWeight: '800',
+  },
+  actionButtonTextNarrow: {
+    fontSize: 16,
   },
   bottomNav: {
     backgroundColor: '#494B4D',
