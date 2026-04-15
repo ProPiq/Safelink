@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ForgotPasswordScreen from '../Auth/ForgotPasswordScreen';
 import LoginScreen from '../Auth/LoginScreen';
 import OtpVerificationScreen from '../Auth/OtpVerificationScreen';
-import BorrowerPortal from '../Borrower/BorrowerPortal';
+import BorrowerHome from '../Borrower/borrowerHome';
 import LenderPortal from '../Lender/LenderPortal';
 import LandingScreen from '../Boarding/LandingScreen';
 
@@ -57,7 +57,7 @@ export default function AppNavigator() {
   }
 
   if (user.role === 'borrower') {
-    return <BorrowerPortal onLogout={handleLogout} user={user} />;
+    return <BorrowerHome onLogout={handleLogout} user={user} />;
   }
 
   return <LenderPortal onLogout={handleLogout} user={user} />;
