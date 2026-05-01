@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import {
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StatusBar as NativeStatusBar,
   StyleSheet,
   Text,
@@ -68,12 +71,23 @@ export default function OtpVerificationScreen({ onContinue }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
-      <View style={styles.container}>
-        <View style={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardView}
+      >
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.header}>
+            <View style={styles.logoMark}>
+              <Ionicons color="#F8FAFC" name="shield-checkmark-outline" size={28} />
+            </View>
             <Text style={styles.title}>Verify Your OTP</Text>
             <Text style={styles.subtitle}>
-              Enter OTP sent to your email to verify your identity
+              Enter the code sent to your email to verify your identity.
             </Text>
           </View>
 
@@ -89,15 +103,19 @@ export default function OtpVerificationScreen({ onContinue }) {
                   ref={(ref) => {
                     inputRefs.current[index] = ref;
                   }}
+                  selectionColor="#69C97C"
                   style={styles.otpInput}
                   textAlign="center"
+                  textContentType="oneTimeCode"
                   value={digit}
                 />
               ))}
             </View>
 
-            {error ? <Text style={styles.error}>{error}</Text> : null}
-            {message ? <Text style={styles.message}>{message}</Text> : null}
+            <View style={styles.feedbackArea}>
+              {error ? <Text style={styles.error}>{error}</Text> : null}
+              {message ? <Text style={styles.message}>{message}</Text> : null}
+            </View>
 
             <Pressable
               onPress={handleContinue}
@@ -116,8 +134,8 @@ export default function OtpVerificationScreen({ onContinue }) {
               <Text style={styles.secondaryButtonText}>RESEND OTP</Text>
             </Pressable>
           </View>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -127,42 +145,55 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#494B4D',
   },
-  container: {
+  keyboardView: {
     flex: 1,
+  },
+  container: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
     paddingBottom: bottomInset + 20,
     paddingHorizontal: 30,
-    paddingTop: topInset + 44,
-  },
-  content: {
-    flex: 1,
+    paddingTop: topInset + 34,
   },
   header: {
     alignItems: 'center',
   },
+  logoMark: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(40,197,95,0.16)',
+    borderColor: 'rgba(105,201,124,0.36)',
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 56,
+    justifyContent: 'center',
+    marginBottom: 18,
+    width: 56,
+  },
   title: {
     color: '#F8FAFC',
-    fontSize: 32,
-    fontWeight: '400',
+    fontSize: 31,
+    fontWeight: '700',
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   subtitle: {
-    color: '#F4F4F5',
+    color: '#DDE2E6',
     fontSize: 15,
     lineHeight: 22,
-    marginTop: 18,
+    marginTop: 12,
     textAlign: 'center',
   },
   form: {
-    marginTop: 32,
+    marginTop: 40,
   },
   otpRow: {
     flexDirection: 'row',
-    gap: 14,
+    gap: 12,
     justifyContent: 'space-between',
   },
   otpInput: {
-    backgroundColor: '#5A5D60',
-    borderColor: '#69C97C',
+    backgroundColor: 'rgba(32,38,42,0.28)',
+    borderColor: 'rgba(105,201,124,0.82)',
     borderRadius: 14,
     borderWidth: 2,
     color: '#F8FAFC',
@@ -171,22 +202,34 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     height: 62,
   },
+  feedbackArea: {
+    minHeight: 38,
+  },
   error: {
     color: '#FCA5A5',
     fontSize: 14,
+    lineHeight: 20,
     marginTop: 18,
+    textAlign: 'center',
   },
   message: {
     color: '#BBF7D0',
     fontSize: 14,
+    lineHeight: 20,
     marginTop: 18,
+    textAlign: 'center',
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#28C55F',
     borderRadius: 14,
-    marginTop: 96,
+    elevation: 3,
+    marginTop: 56,
     paddingVertical: 15,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
   },
   secondaryButton: {
     alignItems: 'center',
@@ -202,13 +245,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 19,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
   secondaryButtonText: {
     color: '#F8FAFC',
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
 });

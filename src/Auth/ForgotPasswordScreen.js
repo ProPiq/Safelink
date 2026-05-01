@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import {
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StatusBar as NativeStatusBar,
   StyleSheet,
   Text,
@@ -30,41 +33,64 @@ export default function ForgotPasswordScreen({ onBack, onContinue }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Forgot Password</Text>
-          <Text style={styles.subtitle}>
-            Enter email to receive reset link and regain access to your account
-          </Text>
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardView}
+      >
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <View style={styles.logoMark}>
+              <Ionicons color="#F8FAFC" name="key-outline" size={28} />
+            </View>
+            <Text style={styles.title}>Forgot Password</Text>
+            <Text style={styles.subtitle}>
+              Enter your email and we'll send a reset link to help you regain access.
+            </Text>
+          </View>
 
-        <View style={styles.form}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            autoCapitalize="none"
-            keyboardType="email-address"
-            onChangeText={setEmail}
-            placeholder="jdoe@user.co.bw"
-            placeholderTextColor="rgba(248,250,252,0.55)"
-            style={styles.input}
-            value={email}
-          />
+          <View style={styles.form}>
+            <Text style={styles.label}>Email</Text>
+            <View style={styles.inputRow}>
+              <Ionicons color="#BBF7D0" name="mail-outline" size={21} style={styles.inputIcon} />
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="email"
+                keyboardType="email-address"
+                onChangeText={(value) => {
+                  setEmail(value);
+                  if (error) setError('');
+                }}
+                onSubmitEditing={handleSubmit}
+                placeholder="jdoe@user.co.bw"
+                placeholderTextColor="rgba(248,250,252,0.5)"
+                returnKeyType="send"
+                style={styles.input}
+                textContentType="emailAddress"
+                value={email}
+              />
+            </View>
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <Pressable
-            onPress={handleSubmit}
-            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-          >
-            <Text style={styles.buttonText}>SEND RESET LINK</Text>
-          </Pressable>
-        </View>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+            <Pressable
+              onPress={handleSubmit}
+              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            >
+              <Text style={styles.buttonText}>SEND RESET LINK</Text>
+            </Pressable>
+          </View>
 
-        <View style={styles.footer}>
-          <Pressable onPress={onBack}>
-            <Text style={styles.backText}>Back to login</Text>
-          </Pressable>
-        </View>
-      </View>
+          <View style={styles.footer}>
+            <Pressable onPress={onBack} style={({ pressed }) => pressed && styles.buttonPressed}>
+              <Text style={styles.backText}>Back to login</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -74,31 +100,46 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#494B4D',
   },
-  container: {
+  keyboardView: {
     flex: 1,
+  },
+  container: {
+    flexGrow: 1,
     justifyContent: 'space-between',
     paddingBottom: bottomInset + 20,
     paddingHorizontal: 30,
-    paddingTop: topInset + 44,
+    paddingTop: topInset + 34,
   },
   header: {
     alignItems: 'center',
   },
+  logoMark: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(40,197,95,0.16)',
+    borderColor: 'rgba(105,201,124,0.36)',
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 56,
+    justifyContent: 'center',
+    marginBottom: 18,
+    width: 56,
+  },
   title: {
     color: '#F8FAFC',
-    fontSize: 32,
-    fontWeight: '400',
+    fontSize: 31,
+    fontWeight: '700',
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   subtitle: {
-    color: '#F4F4F5',
+    color: '#DDE2E6',
     fontSize: 15,
     lineHeight: 22,
-    marginTop: 18,
+    marginTop: 12,
     textAlign: 'center',
   },
   form: {
-    marginTop: 0,
+    marginTop: 34,
   },
   label: {
     color: '#F4F4F5',
@@ -106,26 +147,42 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textTransform: 'lowercase',
   },
-  input: {
+  inputRow: {
+    alignItems: 'center',
     borderBottomColor: '#69C97C',
     borderBottomWidth: 3,
+    flexDirection: 'row',
+    minHeight: 48,
+    paddingBottom: 7,
+  },
+  input: {
     color: '#F8FAFC',
+    flex: 1,
     fontSize: 18,
-    paddingBottom: 10,
+    paddingBottom: 0,
     paddingHorizontal: 0,
     paddingTop: 0,
+  },
+  inputIcon: {
+    marginRight: 10,
   },
   error: {
     color: '#FCA5A5',
     fontSize: 14,
+    lineHeight: 20,
     marginTop: 18,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#28C55F',
     borderRadius: 14,
-    marginTop: 64,
+    elevation: 3,
+    marginTop: 42,
     paddingVertical: 15,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
   },
   buttonPressed: {
     opacity: 0.92,
@@ -133,11 +190,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 19,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
   footer: {
     alignItems: 'center',
+    marginTop: 34,
   },
   backText: {
     color: '#F8FAFC',

@@ -5,6 +5,7 @@ import CreatePasswordScreen from '../Auth/CreatePasswordScreen';
 import ForgotPasswordScreen from '../Auth/ForgotPasswordScreen';
 import LoginScreen from '../Auth/LoginScreen';
 import OtpVerificationScreen from '../Auth/OtpVerificationScreen';
+import Register from '../Auth/Register';
 import NotificationsScreen from '../Borrower/NotificationsScreen';
 import RequestScreen from '../Borrower/RequestScreen';
 import Transact from '../Borrower/Transact';
@@ -34,6 +35,16 @@ export function AuthStackNavigator({ onLogin }) {
           <LoginScreen
             onForgotPassword={() => navigation.navigate('ForgotPassword')}
             onLogin={onLogin}
+            onRegister={() => navigation.navigate('Register')}
+          />
+        )}
+      </AuthStack.Screen>
+
+      <AuthStack.Screen name="Register">
+        {({ navigation }) => (
+          <Register
+            onBack={() => navigation.navigate('Login')}
+            onRegister={() => navigation.navigate('Login')}
           />
         )}
       </AuthStack.Screen>

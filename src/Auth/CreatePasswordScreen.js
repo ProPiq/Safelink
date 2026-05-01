@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import {
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StatusBar as NativeStatusBar,
   StyleSheet,
   Text,
@@ -40,24 +42,47 @@ export default function CreatePasswordScreen({ onContinue }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Create New Password</Text>
-          <Text style={styles.subtitle}>
-            Set a new strong password to enhance security and protect your account
-          </Text>
-        </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardView}
+      >
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <View style={styles.logoMark}>
+              <Ionicons color="#F8FAFC" name="lock-closed-outline" size={28} />
+            </View>
+            <Text style={styles.title}>Create New Password</Text>
+            <Text style={styles.subtitle}>
+              Set a strong password to enhance security and protect your account.
+            </Text>
+          </View>
 
-        <View style={styles.formSection}>
           <View style={styles.form}>
             <Text style={styles.label}>New password</Text>
             <View style={styles.inputRow}>
+              <Ionicons
+                color="#BBF7D0"
+                name="lock-closed-outline"
+                size={21}
+                style={styles.inputIcon}
+              />
               <TextInput
-                onChangeText={setNewPassword}
-                placeholder="***************"
-                placeholderTextColor="rgba(248,250,252,0.55)"
+                autoComplete="new-password"
+                onChangeText={(value) => {
+                  setNewPassword(value);
+                  if (error) setError('');
+                }}
+                placeholder="Enter your new password"
+                placeholderTextColor="rgba(248,250,252,0.5)"
+                returnKeyType="next"
                 secureTextEntry={!showNewPassword}
                 style={styles.input}
+                textContentType="newPassword"
                 value={newPassword}
               />
               <Pressable
@@ -75,12 +100,25 @@ export default function CreatePasswordScreen({ onContinue }) {
 
             <Text style={[styles.label, styles.passwordLabel]}>Confirm password</Text>
             <View style={styles.inputRow}>
+              <Ionicons
+                color="#BBF7D0"
+                name="shield-checkmark-outline"
+                size={21}
+                style={styles.inputIcon}
+              />
               <TextInput
-                onChangeText={setConfirmPassword}
-                placeholder="***************"
-                placeholderTextColor="rgba(248,250,252,0.55)"
+                autoComplete="new-password"
+                onChangeText={(value) => {
+                  setConfirmPassword(value);
+                  if (error) setError('');
+                }}
+                onSubmitEditing={handleSubmit}
+                placeholder="Confirm your password"
+                placeholderTextColor="rgba(248,250,252,0.5)"
+                returnKeyType="done"
                 secureTextEntry={!showConfirmPassword}
                 style={styles.input}
+                textContentType="newPassword"
                 value={confirmPassword}
               />
               <Pressable
@@ -98,15 +136,15 @@ export default function CreatePasswordScreen({ onContinue }) {
 
             {error ? <Text style={styles.error}>{error}</Text> : null}
           </View>
-        </View>
 
-        <Pressable
-          onPress={handleSubmit}
-          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-        >
-          <Text style={styles.buttonText}>CONTINUE</Text>
-        </Pressable>
-      </View>
+          <Pressable
+            onPress={handleSubmit}
+            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+          >
+            <Text style={styles.buttonText}>CONTINUE</Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -116,36 +154,47 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#494B4D',
   },
-  container: {
+  keyboardView: {
     flex: 1,
-    justifyContent: 'space-between',
+  },
+  container: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
     paddingBottom: bottomInset + 20,
     paddingHorizontal: 30,
-    paddingTop: topInset + 44,
+    paddingTop: topInset + 34,
   },
   header: {
     alignItems: 'center',
   },
+  logoMark: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(40,197,95,0.16)',
+    borderColor: 'rgba(105,201,124,0.36)',
+    borderRadius: 22,
+    borderWidth: 1,
+    height: 56,
+    justifyContent: 'center',
+    marginBottom: 18,
+    width: 56,
+  },
   title: {
     color: '#F8FAFC',
-    fontSize: 32,
-    fontWeight: '400',
+    fontSize: 31,
+    fontWeight: '700',
     letterSpacing: 0.5,
     textAlign: 'center',
   },
   subtitle: {
-    color: '#F4F4F5',
+    color: '#DDE2E6',
     fontSize: 15,
     lineHeight: 22,
-    marginTop: 18,
+    marginTop: 12,
     textAlign: 'center',
   },
   form: {
+    marginTop: 34,
     width: '100%',
-  },
-  formSection: {
-    flex: 1,
-    justifyContent: 'center',
   },
   label: {
     color: '#F4F4F5',
@@ -154,38 +203,51 @@ const styles = StyleSheet.create({
     textTransform: 'lowercase',
   },
   passwordLabel: {
-    marginTop: 26,
+    marginTop: 24,
   },
   inputRow: {
     alignItems: 'center',
     borderBottomColor: '#69C97C',
     borderBottomWidth: 3,
     flexDirection: 'row',
+    minHeight: 48,
+    paddingBottom: 7,
   },
   input: {
     color: '#F8FAFC',
     flex: 1,
     fontSize: 18,
-    paddingBottom: 10,
+    paddingBottom: 0,
     paddingHorizontal: 0,
     paddingTop: 0,
   },
+  inputIcon: {
+    marginRight: 10,
+  },
   visibilityButton: {
     alignItems: 'center',
-    height: 28,
+    height: 34,
     justifyContent: 'center',
-    width: 28,
+    marginLeft: 8,
+    width: 34,
   },
   error: {
     color: '#FCA5A5',
     fontSize: 14,
+    lineHeight: 20,
     marginTop: 18,
   },
   button: {
     alignItems: 'center',
     backgroundColor: '#28C55F',
     borderRadius: 14,
+    elevation: 3,
+    marginTop: 42,
     paddingVertical: 15,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
   },
   buttonPressed: {
     opacity: 0.92,
@@ -193,7 +255,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#ffffff',
     fontSize: 19,
-    fontWeight: '500',
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
 });

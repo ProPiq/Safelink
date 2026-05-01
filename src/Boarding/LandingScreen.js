@@ -68,10 +68,10 @@ function DashboardCard({ title, value, detail, backgroundColor, accent, chart })
           <View style={styles.metricRow}>
             <Ionicons color="#EAF5F7" name="person-circle-outline" size={20} />
             <Text style={styles.metricValue}>{value}</Text>
+            <MaterialCommunityIcons color={accent} name={chart} size={26} style={styles.chartIcon} />
           </View>
           <Text style={styles.metricDetail}>{detail}</Text>
         </View>
-        <MaterialCommunityIcons color={accent} name={chart} size={26} />
       </View>
     </View>
   );
@@ -149,13 +149,13 @@ export default function LandingScreen({ onContinue }) {
               ]}
             >
               Connecting lenders & borrowers, securely.
+              <Ionicons
+                color="#D59645"
+                name="lock-closed"
+                size={isShortScreen ? 22 : 26}
+                style={styles.inlineLockIcon}
+              />
             </Text>
-            <Ionicons
-              color="#D59645"
-              name="lock-closed"
-              size={isShortScreen ? 24 : 30}
-              style={[styles.lockIcon, isShortScreen && styles.lockIconShort]}
-            />
           </View>
 
           <View style={[styles.dashboardRow, isNarrowScreen && styles.compactRow]}>
@@ -297,12 +297,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 30,
   },
-  lockIcon: {
-    marginLeft: 4,
-    marginTop: 16,
-  },
-  lockIconShort: {
-    marginTop: 10,
+  inlineLockIcon: {
+    marginLeft: 6,
   },
   dashboardRow: {
     flexDirection: 'row',
@@ -341,10 +337,8 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   cardFooter: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 14,
   },
   metricRow: {
@@ -356,6 +350,9 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '800',
     marginLeft: 4,
+  },
+  chartIcon: {
+    marginLeft: 8,
   },
   metricDetail: {
     color: '#F8FAFC',
