@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 23,
     paddingTop: topInset + 8,
   },
   containerShort: {
@@ -207,10 +207,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 22,
+    marginBottom: 20,
   },
   topBarShort: {
-    marginBottom: 16,
+    marginBottom: 18,
   },
   iconButton: {
     alignItems: 'center',

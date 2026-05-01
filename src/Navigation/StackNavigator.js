@@ -7,6 +7,7 @@ import LoginScreen from '../Auth/LoginScreen';
 import OtpVerificationScreen from '../Auth/OtpVerificationScreen';
 import NotificationsScreen from '../Borrower/NotificationsScreen';
 import RequestScreen from '../Borrower/RequestScreen';
+import Transact from '../Borrower/Transact';
 import LandingScreen from '../Boarding/LandingScreen';
 import DrawerNavigator from './DrawerNavigator';
 
@@ -78,6 +79,7 @@ export function BorrowerStackNavigator({ onLogout, onSwitchPortal, user }) {
           <DrawerNavigator
             onLogout={onLogout}
             onOpenNotifications={() => navigation.navigate('Notifications')}
+            onOpenTransact={(mode) => navigation.navigate('Transact', { mode })}
             onSubmitRequest={(requestData) => {
               setRequestDraft(requestData);
               navigation.navigate('Request');
@@ -111,6 +113,12 @@ export function BorrowerStackNavigator({ onLogout, onSwitchPortal, user }) {
             onOpenNotifications={() => navigation.navigate('Notifications')}
             requestData={requestDraft}
           />
+        )}
+      </BorrowerStack.Screen>
+
+      <BorrowerStack.Screen name="Transact">
+        {({ navigation, route }) => (
+          <Transact mode={route.params?.mode} onBack={() => navigation.goBack()} />
         )}
       </BorrowerStack.Screen>
     </BorrowerStack.Navigator>

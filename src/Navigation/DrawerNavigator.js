@@ -169,6 +169,7 @@ function CustomDrawerContent({
 export default function DrawerNavigator({
   onLogout,
   onOpenNotifications,
+  onOpenTransact,
   onSubmitRequest,
   onSwitchPortal,
   portal = 'borrower',
@@ -202,6 +203,7 @@ export default function DrawerNavigator({
           <BottomTabNavigator
             drawerId={config.drawerId}
             onOpenNotifications={onOpenNotifications}
+            onOpenTransact={onOpenTransact}
             onSubmitRequest={onSubmitRequest}
             portal={portal}
             user={user}

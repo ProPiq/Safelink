@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BorrowerHome from '../Borrower/borrowerHome';
 import Explore from '../Borrower/Explore';
 import Loans from '../Borrower/Loans';
+import Profile from '../Borrower/Profile';
+import Wallet from '../Borrower/Wallet';
 import LenderPortal from '../Lender/LenderPortal';
 
 const BottomTab = createBottomTabNavigator();
@@ -73,6 +75,7 @@ function PlaceholderScreen({ drawerId, navigation, onOpenNotifications, title })
 export default function BottomTabNavigator({
   drawerId = 'BorrowerDrawer',
   onOpenNotifications,
+  onOpenTransact,
   onSubmitRequest,
   portal = 'borrower',
   user,
@@ -81,6 +84,7 @@ export default function BottomTabNavigator({
   const tabItems = config.tabs;
   const insets = useSafeAreaInsets();
   const bottomInset = Platform.OS === 'android' ? insets.bottom : 0;
+  const hasAndroidSystemNav = Platform.OS === 'android' && bottomInset > 0;
 
   return (
     <BottomTab.Navigator
@@ -101,8 +105,9 @@ export default function BottomTabNavigator({
           tabBarStyle: [
             styles.tabBar,
             {
-              height: 86 + bottomInset,
-              paddingBottom: 12 + bottomInset,
+              bottom: hasAndroidSystemNav ? bottomInset : 0,
+              height: 72,
+              paddingBottom: 12,
             },
           ],
         };
@@ -138,18 +143,24 @@ export default function BottomTabNavigator({
             )}
           </BottomTab.Screen>
 
-          {['Profile', 'Wallet'].map((name) => (
-            <BottomTab.Screen key={name} name={name}>
-              {({ navigation }) => (
-                <PlaceholderScreen
-                  drawerId={drawerId}
-                  navigation={navigation}
-                  onOpenNotifications={onOpenNotifications}
-                  title={name}
-                />
-              )}
-            </BottomTab.Screen>
-          ))}
+          <BottomTab.Screen name="Profile">
+            {({ navigation }) => (
+              <Profile
+                onOpenMenu={() => navigation.getParent(drawerId)?.openDrawer()}
+                onOpenNotifications={onOpenNotifications}
+              />
+            )}
+          </BottomTab.Screen>
+
+          <BottomTab.Screen name="Wallet">
+            {({ navigation }) => (
+              <Wallet
+                onOpenMenu={() => navigation.getParent(drawerId)?.openDrawer()}
+                onOpenNotifications={onOpenNotifications}
+                onOpenTransact={onOpenTransact}
+              />
+            )}
+          </BottomTab.Screen>
         </>
       ) : (
         <>
@@ -183,13 +194,19 @@ export default function BottomTabNavigator({
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#20262A',
     borderTopWidth: 0,
-    elevation: 0,
+    borderRadius: 999,
+    elevation: 8,
+    left: 18,
     paddingHorizontal: 14,
     paddingTop: 12,
     position: 'absolute',
-    shadowColor: 'transparent',
+    right: 18,
+    shadowColor: '#000000',
+    shadowOffset: { height: -3, width: 0 },
+    shadowOpacity: 0.16,
+    shadowRadius: 10,
   },
   tabItem: {
     justifyContent: 'center',

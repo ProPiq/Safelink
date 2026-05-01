@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 23,
     paddingTop: topInset + 8,
   },
   containerShort: {
@@ -410,16 +410,16 @@ const styles = StyleSheet.create({
     paddingTop: topInset + 2,
   },
   containerNarrow: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 18,
   },
   topBar: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   topBarShort: {
-    marginBottom: 12,
+    marginBottom: 18,
   },
   iconButton: {
     alignItems: 'center',
@@ -429,11 +429,11 @@ const styles = StyleSheet.create({
   },
   brand: {
     color: '#F8FAFC',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '800',
   },
   brandNarrow: {
-    fontSize: 16,
+    fontSize: 15,
   },
   content: {
     flex: 1,
