@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BorrowerHome from '../Borrower/borrowerHome';
 import Explore from '../Borrower/Explore';
+import Loans from '../Borrower/Loans';
 import LenderPortal from '../Lender/LenderPortal';
 
 const BottomTab = createBottomTabNavigator();
@@ -128,7 +129,16 @@ export default function BottomTabNavigator({
             )}
           </BottomTab.Screen>
 
-          {['Loans', 'Profile', 'Wallet'].map((name) => (
+          <BottomTab.Screen name="Loans">
+            {({ navigation }) => (
+              <Loans
+                onOpenMenu={() => navigation.getParent(drawerId)?.openDrawer()}
+                onOpenNotifications={onOpenNotifications}
+              />
+            )}
+          </BottomTab.Screen>
+
+          {['Profile', 'Wallet'].map((name) => (
             <BottomTab.Screen key={name} name={name}>
               {({ navigation }) => (
                 <PlaceholderScreen

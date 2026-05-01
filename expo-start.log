@@ -1,7 +1,8 @@
 
 > safelink@1.0.0 start
-> expo start --localhost
+> expo start --offline --port 8081
 
+Networking has been disabled
 Starting project at C:\Safelink
 › Port 8081 is being used by another process
 › Skipping dev server
